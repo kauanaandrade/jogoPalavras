@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+   
+  <title>Adivinha a Palavra</title>
+  <style>
+    body {
+    font-family: Arial, sans-serif;
+    text-align: center;
+    margin: 50px;
+}
+
+#word-display {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+#wrong-letters {
+    color: red;
+    margin-bottom: 10px;
+}
+
+button {
+    margin-top: 10px;
+    padding: 5px 10px;
+    font-size: 16px;
+}
+
+  </style>
+</head>
+<body>
+   
+
+        <div id="word-display"></div>
+        <div id="wrong-letters"></div>
+        <p>Chances Restantes: <span id="chances"></span></p>
+        <input type="text" id="letter-input" maxlength="1">
+        <button onclick="chutarLetra()">Chutar!</button>
+    
+        <script src="script.js"></script>
+    </body>
+    
+</html>
+<Script>
+  // Lista de palavras secretas
+const palavras = ["banco", "itau", "oportunidade", "metas", "desenvolvimento", "crescimento"];
+
+// Seleciona uma palavra aleatória
+let palavraSecreta = palavras[Math.floor(Math.random() * palavras.length)];
+
+// Inicializa o mostrador de letras da palavra secreta
+let exibicaoPalavra = Array(palavraSecreta.length).fill('_');
+
+// Inicializa a quantidade de chutes
+let chancesRestantes = palavraSecreta.length * 2;
+
+// Função para atualizar a tela
+function atualizarTela() {
+    document.getElementById('word-display').textContent = exibicaoPalavra.join(' ');
+    document.getElementById('chances').textContent = chancesRestantes;
+    document.getElementById('wrong-letters').textContent = "Chutes Errados: " + letrasErradas.join(', ');
+}
+
+// Inicializa a lista de letras erradas
+let letrasErradas = [];
+
+// Função chamada ao pressionar o botão "Chutar!"
+function chutarLetra() {
+    const letraInput = document.getElementById('letter-input').value.toLowerCase();
+
+    // Verifica se a letra já foi escolhida
+    if (exibicaoPalavra.includes(letraInput) || letrasErradas.includes(letraInput)) {
+        alert("Você já escolheu essa letra. Tente outra.");
+        return;
+    }
+
+    // Verifica se a letra pertence à palavra secreta
+    if (palavraSecreta.includes(letraInput)) {
+        // Atualiza o mostrador da palavra secreta
+        for (let i = 0; i < palavraSecreta.length; i++) {
+            if (palavraSecreta[i] === letraInput) {
+                exibicaoPalavra[i] = letraInput;
+            }
+        }
+
+        // Verifica se o jogador acertou a palavra
+        if (!exibicaoPalavra.includes('_')) {
+            alert("Parabéns! Você acertou a palavra: " + palavraSecreta);
+            reiniciarJogo();
+        }
+    } else {
+        // Subtrai uma chance
+        chancesRestantes--;
+
+        // Adiciona a letra errada à lista
+        letrasErradas.push(letraInput);
+
+        // Verifica se o jogador perdeu
+        if (chancesRestantes === 0) {
+            alert("Você perdeu! A palavra era: " + palavraSecreta);
+            reiniciarJogo();
+        }
+    }
+
+    // Atualiza a tela
+    atualizarTela();
+}
+
+// Função para reiniciar o jogo
+function reiniciarJogo() {
+    palavraSecreta = palavras[Math.floor(Math.random() * palavras.length)];
+    exibicaoPalavra = Array(palavraSecreta.length).fill('_');
+    chancesRestantes = palavraSecreta.length * 2;
+    letrasErradas = [];
+    atualizarTela();
+}
+
+</Script>
